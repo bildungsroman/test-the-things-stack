@@ -215,6 +215,82 @@ Resources:
       TableName: !Sub ${AWS::StackName}-table6E08C5D
     Metadata:
       StackeryName: Users
+  functionEA1CC72D:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-functionEA1CC72D
+      Description: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
+        - ResourceName: iPlayNiceWithDbs
+      CodeUri: src/functionEA1CC72D
+      Handler: index.handler
+      Runtime: nodejs8.10
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - AWSXrayWriteOnlyAccess
+      Environment:
+        Variables:
+          DB_INSTANCE: !Ref databaseB5B86CF1
+          DB_ADDRESS: !GetAtt databaseB5B86CF1.Endpoint.Address
+          DB_PORT: !GetAtt databaseB5B86CF1.Endpoint.Port
+          DB_ARN: !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:db:${databaseB5B86CF1}
+    Metadata:
+      StackeryName: iPlayNiceWithDbs
+  databaseB5B86CF1:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: '1'
+      AllowMajorVersionUpgrade: true
+      AutoMinorVersionUpgrade: true
+      BackupRetentionPeriod: '0'
+      CopyTagsToSnapshot: true
+      DBInstanceClass: db.t2.micro
+      DBSubnetGroupName: !Ref databaseB5B86CF1SubnetGroup
+      Engine: mysql
+      EngineVersion: '5.7'
+      MasterUsername: root
+      MasterUserPassword: ''
+      MultiAZ: false
+      PubliclyAccessible: true
+      StorageType: gp2
+      Tags:
+        - Key: Name
+          Value: !Sub
+            - Stack ${StackTagName} Environment ${EnvironmentTagName} Database ${ResourceName}
+            - ResourceName: pleaseWork
+      VPCSecurityGroups:
+        - !Ref databaseB5B86CF1SecurityGroup
+    Metadata:
+      StackeryName: pleaseWork
+  databaseB5B86CF1SubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Database ${ResourceName} VPC Subnets
+        - ResourceName: databaseB5B86CF1
+      SubnetIds: !Ref DefaultVPCSubnets
+      Tags:
+        - Key: Name
+          Value: !Sub
+            - Stack ${StackTagName} Environment ${EnvironmentTagName} Database ${ResourceName} VPC Subnets
+            - ResourceName: databaseB5B86CF1
+  databaseB5B86CF1SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Database Security Group
+      SecurityGroupIngress:
+        CidrIp: 0.0.0.0/0
+        FromPort: 3306
+        IpProtocol: tcp
+        ToPort: 3306
+      Tags:
+        - Key: Name
+          Value: !Sub
+            - Stack ${StackTagName} Environment ${EnvironmentTagName} Database ${ResourceName} VPC Security Group
+            - ResourceName: pleaseWork
+      VpcId: !Ref DefaultVPCId
 Parameters:
   StackeryStackTagName:
     Type: String
@@ -225,3 +301,15 @@ Parameters:
   StackeryEnvironmentAPIGatewayStageName:
     Type: String
     Description: Environment name used for API Gateway Stage names (injected by Stackery at deployment time)
+  StackTagName:
+    Type: String
+    Description: Stack Name (injected by Stackery at deployment time)
+  EnvironmentTagName:
+    Type: String
+    Description: Environment Name (injected by Stackery at deployment time)
+  DefaultVPCId:
+    Type: AWS::EC2::VPC::Id
+    Description: AWS account-specific default VPC ID (injected by Stackery at deployment time)
+  DefaultVPCSubnets:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: AWS account-specific default VPC subnets (injected by Stackery at deployment time)
