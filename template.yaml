@@ -251,7 +251,7 @@ Resources:
       Engine: mysql
       EngineVersion: '5.7'
       MasterUsername: root
-      MasterUserPassword: ''
+      MasterUserPassword: notblank
       MultiAZ: false
       PubliclyAccessible: true
       StorageType: gp2
