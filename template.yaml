@@ -241,7 +241,7 @@ Resources:
   databaseB5B86CF1:
     Type: AWS::RDS::DBInstance
     Properties:
-      AllocatedStorage: '1'
+      AllocatedStorage: '5'
       AllowMajorVersionUpgrade: true
       AutoMinorVersionUpgrade: true
       BackupRetentionPeriod: '0'
