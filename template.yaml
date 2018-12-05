@@ -237,6 +237,8 @@ Resources:
           DB_ADDRESS: !GetAtt databaseB5B86CF1.Endpoint.Address
           DB_PORT: !GetAtt databaseB5B86CF1.Endpoint.Port
           DB_ARN: !Sub arn:aws:rds:${AWS::Region}:${AWS::AccountId}:db:${databaseB5B86CF1}
+          DB_PASSWORD: !Ref EnvConfigbadPlaceForADbPasswordAsString
+          CHEEZBURGER: !Ref EnvConfigiCanHazSecretAsString
     Metadata:
       StackeryName: iPlayNiceWithDbs
   databaseB5B86CF1:
@@ -317,6 +319,14 @@ Parameters:
   EnvConfiggithubSecretAsString:
     Type: AWS::SSM::Parameter::Value<String>
     Default: /<EnvironmentName>/githubSecret
+  EnvConfigbadPlaceForADbPasswordAsString:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /<EnvironmentName>/badPlaceForADbPassword
+  EnvConfigiCanHazSecretAsString:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /<EnvironmentName>/iCanHazSecret
 Metadata:
   EnvConfigParameters:
     EnvConfiggithubSecretAsString: githubSecret
+    EnvConfigbadPlaceForADbPasswordAsString: badPlaceForADbPassword
+    EnvConfigiCanHazSecretAsString: iCanHazSecret
