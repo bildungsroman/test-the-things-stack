@@ -189,6 +189,7 @@ Resources:
         Variables:
           TABLE_NAME: !Ref table6E08C5D
           TABLE_ARN: !GetAtt table6E08C5D.Arn
+          GITHUB_SECRET: !Ref EnvConfiggithubSecretAsString
       Events:
         api3FEE112A:
           Type: Api
@@ -313,3 +314,9 @@ Parameters:
   DefaultVPCSubnets:
     Type: List<AWS::EC2::Subnet::Id>
     Description: AWS account-specific default VPC subnets (injected by Stackery at deployment time)
+  EnvConfiggithubSecretAsString:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /<EnvironmentName>/githubSecret
+Metadata:
+  EnvConfigParameters:
+    EnvConfiggithubSecretAsString: githubSecret
